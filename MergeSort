@@ -1,0 +1,71 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// GenerateRandomArray generates a random array of specified length
+func GenerateRandomArray(length int) []int {
+	rand.Seed(time.Now().UnixNano())
+	arr := make([]int, length)
+	for i := 0; i < length; i++ {
+		arr[i] = rand.Intn(1000) // Adjust the upper limit as needed
+	}
+	return arr
+}
+
+// MergeSort function recursively divides and merges the slices
+func MergeSort(arr []int) []int {
+	if len(arr) <= 1 {
+		return arr
+	}
+
+	mid := len(arr) / 2
+	left := MergeSort(arr[:mid])
+	right := MergeSort(arr[mid:])
+
+	return merge(left, right)
+}
+
+// merge function merges two sorted slices into a single sorted slice
+func merge(left, right []int) []int {
+	result := make([]int, 0, len(left)+len(right))
+	i, j := 0, 0
+
+	for i < len(left) && j < len(right) {
+		if left[i] <= right[j] {
+			result = append(result, left[i])
+			i++
+		} else {
+			result = append(result, right[j])
+			j++
+		}
+	}
+
+	result = append(result, left[i:]...)
+	result = append(result, right[j:]...)
+
+	return result
+}
+
+func main() {
+	var arrayLength int
+
+	// Get user input for array length
+	fmt.Print("Enter the length of the array: ")
+	fmt.Scan(&arrayLength)
+
+	// Generate a random array
+	randomArray := GenerateRandomArray(arrayLength)
+
+	// Measure the time taken by MergeSort
+	startTime := time.Now()
+	_ = MergeSort(randomArray) // Ignore the result to prevent compiler optimization
+	endTime := time.Now()
+
+	// Calculate and print the elapsed time with nanosecond precision
+	elapsedTime := endTime.Sub(startTime)
+	fmt.Printf("Time taken: %f seconds\n", elapsedTime.Seconds())
+}
