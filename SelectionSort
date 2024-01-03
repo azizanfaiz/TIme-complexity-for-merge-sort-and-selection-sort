@@ -1,0 +1,54 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// GenerateRandomArray generates a random array of specified length
+func GenerateRandomArray(length int) []int {
+	rand.Seed(time.Now().UnixNano())
+	arr := make([]int, length)
+	for i := 0; i < length; i++ {
+		arr[i] = rand.Intn(1000) // Adjust the upper limit as needed
+	}
+	return arr
+}
+
+// SelectionSort function performs selection sort on the given slice
+func SelectionSort(arr []int) {
+	n := len(arr)
+
+	for i := 0; i < n-1; i++ {
+		minIndex := i
+		for j := i + 1; j < n; j++ {
+			if arr[j] < arr[minIndex] {
+				minIndex = j
+			}
+		}
+		arr[i], arr[minIndex] = arr[minIndex], arr[i]
+	}
+}
+
+func main() {
+	var arrayLength int
+
+	// Get user input for array length
+	fmt.Print("Enter the length of the array: ")
+	fmt.Scan(&arrayLength)
+
+	// Generate a random array
+	randomArray := GenerateRandomArray(arrayLength)
+	//fmt.Printf("Random unsorted array: %v\n", randomArray) //to show the array before sorted
+
+	// Measure the time taken by SelectionSort
+	startTime := time.Now()
+	SelectionSort(randomArray)
+	endTime := time.Now()
+
+	// Calculate and print the elapsed time with nanosecond precision
+	elapsedTime := endTime.Sub(startTime)
+	//fmt.Printf("Sorted array: %v\n", randomArray) //to show the array after sorted
+	fmt.Printf("Time taken: %f seconds\n", elapsedTime.Seconds())
+}
